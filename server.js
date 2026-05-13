@@ -5,7 +5,7 @@ const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
 const cors     = require('cors');
 const path     = require('path');
-
+const bcrypt = require('bcryptjs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'change_this_secret';
