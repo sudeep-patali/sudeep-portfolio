@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Panel — Sudeep Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--surface:#1e1e2e;--surface2:#252535;
+--accent:#7c6af7;--accent2:#a89cf7;--accent3:#4ade80;--text:#e8e6ff;--text2:#9a98b8;--text3:#5a5878;
+--border:#2a2840;--border2:#3a3858;--mono:'DM Mono',monospace;--red:#ef4444;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── LOGIN SCREEN ─────────────────────────── */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+.login-box{background:var(--surface);border:1px solid var(--border);padding:2.5rem;width:100%;max-width:380px}
+.login-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:0.4rem}
+.login-logo span{color:var(--accent)}
+.login-sub{font-family:var(--mono);font-size:0.72rem;color:var(--text3);margin-bottom:2rem}
+.form-group{margin-bottom:1.2rem}
+.form-label{display:block;font-family:var(--mono);font-size:0.72rem;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.5rem}
+.form-input,.form-textarea,.form-select{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:0.7rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;border-radius:3px;outline:none;transition:border-color .2s}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--accent)}
+.form-textarea{min-height:80px;resize:vertical}
+.form-select option{background:var(--bg3)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.btn-primary{background:var(--accent);color:#fff;border:none;padding:0.7rem 1.8rem;border-radius:4px;cursor:pointer;font-family:var(--mono);font-size:0.82rem;transition:background .2s;width:100%}
+.btn-primary:hover{background:var(--accent2)}
+.login-error{color:var(--red);font-family:var(--mono);font-size:0.78rem;margin-top:0.8rem;display:none}
+
+/* ── ADMIN LAYOUT ──────────────────────────── */
+#admin-screen{display:none}
+.admin-header{position:sticky;top:0;z-index:50;background:rgba(10,10,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0.9rem 2rem;display:flex;justify-content:space-between;align-items:center}
+.admin-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem}
+.admin-logo span{color:var(--accent)}
+.admin-meta{display:flex;align-items:center;gap:1rem}
+.admin-user{font-family:var(--mono);font-size:0.75rem;color:var(--text3)}
+.btn-logout{background:transparent;border:1px solid var(--border2);color:var(--text3);padding:0.4rem 0.9rem;cursor:pointer;font-family:var(--mono);font-size:0.75rem;border-radius:3px;transition:all .2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+.btn-viewsite{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:0.4rem 0.9rem;cursor:pointer;font-family:var(--mono);font-size:0.75rem;border-radius:3px;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem}
+.btn-viewsite:hover{border-color:var(--accent);color:var(--accent)}
+
+.admin-body{display:flex;min-height:calc(100vh - 57px)}
+.sidebar{width:200px;flex-shrink:0;border-right:1px solid var(--border);padding:1.5rem 0}
+.sidebar-link{display:block;padding:0.65rem 1.5rem;font-family:var(--mono);font-size:0.78rem;color:var(--text3);text-decoration:none;cursor:pointer;border:none;background:none;width:100%;text-align:left;letter-spacing:0.04em;transition:all .2s;border-left:2px solid transparent}
+.sidebar-link:hover{color:var(--text2);background:rgba(255,255,255,0.03)}
+.sidebar-link.active{color:var(--accent);border-left-color:var(--accent);background:rgba(124,106,247,0.06)}
+.sidebar-section{font-family:var(--mono);font-size:0.65rem;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;padding:1.2rem 1.5rem 0.4rem}
+
+.main-area{flex:1;padding:2rem;overflow-y:auto}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.panel-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+
+/* Lists */
+.item-list{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.5rem}
+.item-row{background:var(--surface);border:1px solid var(--border);padding:0.9rem 1.1rem;display:flex;align-items:center;gap:0.8rem}
+.item-row-info{flex:1}
+.item-row-title{font-size:0.9rem;font-weight:500}
+.item-row-sub{font-family:var(--mono);font-size:0.72rem;color:var(--text3);margin-top:0.2rem}
+.item-btns{display:flex;gap:0.4rem}
+.ibtn{background:transparent;border:1px solid var(--border);color:var(--text3);padding:0.35rem 0.7rem;cursor:pointer;font-family:var(--mono);font-size:0.72rem;border-radius:2px;transition:all .2s}
+.ibtn:hover{border-color:var(--border2);color:var(--text)}
+.ibtn.danger:hover{border-color:var(--red);color:var(--red)}
+.ibtn.primary:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Add form */
+.add-form{background:var(--bg3);border:1px solid var(--border);padding:1.5rem;border-radius:3px;margin-bottom:1.5rem}
+.add-form-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:600;margin-bottom:1.2rem;color:var(--text2)}
+.btn-save{background:var(--accent);color:#fff;border:none;padding:0.6rem 1.5rem;cursor:pointer;font-family:var(--mono);font-size:0.8rem;border-radius:3px;transition:background .2s}
+.btn-save:hover{background:var(--accent2)}
+.btn-cancel{background:transparent;border:1px solid var(--border2);color:var(--text3);padding:0.6rem 1rem;cursor:pointer;font-family:var(--mono);font-size:0.8rem;border-radius:3px;margin-left:0.5rem}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;right:2rem;padding:0.8rem 1.5rem;font-family:var(--mono);font-size:0.82rem;border-radius:3px;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999}
+.toast.success{background:var(--accent3);color:#000}
+.toast.error{background:var(--red);color:#fff}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:700px){
+  .sidebar{display:none}
+  .admin-body{flex-direction:column}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════ LOGIN ════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Admin<span>.</span></div>
+    <div class="login-sub">Sudeep Portfolio CMS</div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" id="login-user" type="text" value="admin" autocomplete="username"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button class="btn-primary" id="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="login-error">Invalid credentials. Try again.</div>
+  </div>
+</div>
+
+<!-- ════════════════ ADMIN ════════════════ -->
+<div id="admin-screen">
+  <div class="admin-header">
+    <div class="admin-logo">Admin<span>.</span></div>
+    <div class="admin-meta">
+      <span class="admin-user" id="admin-user-label"></span>
+      <a class="btn-viewsite" href="/" target="_blank">↗ View Site</a>
+      <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-section">Content</div>
+      <button class="sidebar-link active" onclick="showTab('profile')">Profile</button>
+      <button class="sidebar-link" onclick="showTab('links')">Links</button>
+      <button class="sidebar-link" onclick="showTab('skills')">Skills</button>
+      <button class="sidebar-link" onclick="showTab('projects')">Projects</button>
+      <button class="sidebar-link" onclick="showTab('education')">Education</button>
+      <button class="sidebar-link" onclick="showTab('certs')">Certifications</button>
+      <button class="sidebar-link" onclick="showTab('achievements')">Achievements</button>
+      <div class="sidebar-section">Account</div>
+      <button class="sidebar-link" onclick="showTab('password')">Change Password</button>
+    </nav>
+
+    <!-- Main -->
+    <div class="main-area">
+
+      <!-- PROFILE -->
+      <div class="tab-panel active" id="tab-profile">
+        <div class="panel-title">Profile</div>
+        <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="p-name"/></div>
+        <div class="form-group"><label class="form-label">Headline / Title</label><input class="form-input" id="p-title"/></div>
+        <div class="form-group"><label class="form-label">Bio</label><textarea class="form-textarea" id="p-bio"></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="p-email" type="email"/></div>
+          <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="p-phone"/></div>
+        </div>
+        <button class="btn-save" onclick="saveProfile()">Save Profile</button>
+      </div>
+
+      <!-- LINKS -->
+      <div class="tab-panel" id="tab-links">
+        <div class="panel-title">Links / URLs</div>
+        <div class="item-list" id="links-list"></div>
+        <div class="add-form">
+          <div class="add-form-title">Add Link</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Label</label><input class="form-input" id="l-label" placeholder="e.g. GitHub"/></div>
+            <div class="form-group"><label class="form-label">URL</label><input class="form-input" id="l-url" placeholder="https://..."/></div>
+          </div>
+          <button class="btn-save" onclick="addLink()">Add Link</button>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="tab-panel" id="tab-skills">
+        <div class="panel-title">Skills</div>
+        <div class="item-list" id="skills-list"></div>
+        <div class="add-form">
+          <div class="add-form-title">Add Skill</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Category</label>
+              <select class="form-select" id="s-cat">
+                <option>Programming Languages</option>
+                <option>Web Development</option>
+                <option>AI / ML</option>
+                <option>Database</option>
+                <option>Soft Skills</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Skill</label><input class="form-input" id="s-skill" placeholder="e.g. React"/></div>
+          </div>
+          <button class="btn-save" onclick="addSkill()">Add Skill</button>
+        </div>
+      </div>
+
+      <!-- PROJECTS -->
+      <div class="tab-panel" id="tab-projects">
+        <div class="panel-title">Projects</div>
+        <div class="item-list" id="projects-list"></div>
+        <div class="add-form" id="project-form">
+          <div class="add-form-title" id="project-form-title">Add Project</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" id="pr-name" placeholder="Project Title"/></div>
+            <div class="form-group"><label class="form-label">Stack / Tech</label><input class="form-input" id="pr-stack" placeholder="React, Node.js, ..."/></div>
+          </div>
+          <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="pr-desc"></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Status</label>
+              <select class="form-select" id="pr-status"><option value="complete">Complete</option><option value="ongoing">Ongoing</option></select>
+            </div>
+            <div class="form-group"><label class="form-label">URL (optional)</label><input class="form-input" id="pr-url" placeholder="https://..."/></div>
+          </div>
+          <button class="btn-save" id="pr-save-btn" onclick="saveProject()">Add Project</button>
+          <button class="btn-cancel" id="pr-cancel-btn" style="display:none" onclick="cancelProjectEdit()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="tab-panel" id="tab-education">
+        <div class="panel-title">Education</div>
+        <div class="item-list" id="edu-list"></div>
+        <div class="add-form">
+          <div class="add-form-title" id="edu-form-title">Add Education</div>
+          <div class="form-group"><label class="form-label">Degree / Level</label><input class="form-input" id="ed-degree" placeholder="Bachelor of Engineering (CSE)"/></div>
+          <div class="form-group"><label class="form-label">Institution</label><input class="form-input" id="ed-school" placeholder="College Name"/></div>
+          <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="ed-place" placeholder="City, State"/></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Score</label><input class="form-input" id="ed-score" placeholder="9.47 CGPA"/></div>
+            <div class="form-group"><label class="form-label">Years</label><input class="form-input" id="ed-year" placeholder="2023 – 2027"/></div>
+          </div>
+          <button class="btn-save" id="ed-save-btn" onclick="saveEdu()">Add Education</button>
+          <button class="btn-cancel" id="ed-cancel-btn" style="display:none" onclick="cancelEduEdit()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- CERTS -->
+      <div class="tab-panel" id="tab-certs">
+        <div class="panel-title">Certifications</div>
+        <div class="item-list" id="certs-list"></div>
+        <div class="add-form">
+          <div class="add-form-title">Add Certification</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Certificate Name</label><input class="form-input" id="c-name" placeholder="Certificate Title"/></div>
+            <div class="form-group"><label class="form-label">Issuing Body</label><input class="form-input" id="c-by" placeholder="NPTEL, Udemy, ..."/></div>
+          </div>
+          <button class="btn-save" onclick="addCert()">Add Certification</button>
+        </div>
+      </div>
+
+      <!-- ACHIEVEMENTS -->
+      <div class="tab-panel" id="tab-achievements">
+        <div class="panel-title">Achievements</div>
+        <div class="item-list" id="ach-list"></div>
+        <div class="add-form">
+          <div class="add-form-title">Add Achievement</div>
+          <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="a-title" placeholder="Achievement title"/></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Organiser / Context</label><input class="form-input" id="a-by" placeholder="LeetCode, Google, ..."/></div>
+            <div class="form-group"><label class="form-label">Rank / Badge</label><input class="form-input" id="a-rank" placeholder="1st, Gold, ..."/></div>
+          </div>
+          <button class="btn-save" onclick="addAch()">Add Achievement</button>
+        </div>
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div class="tab-panel" id="tab-password">
+        <div class="panel-title">Change Password</div>
+        <div style="max-width:400px">
+          <div class="form-group"><label class="form-label">Current Password</label><input class="form-input" id="pw-current" type="password"/></div>
+          <div class="form-group"><label class="form-label">New Password</label><input class="form-input" id="pw-new" type="password"/></div>
+          <div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-input" id="pw-confirm" type="password"/></div>
+          <button class="btn-save" onclick="changePassword()">Update Password</button>
+        </div>
+      </div>
+
+    </div><!-- /main-area -->
+  </div><!-- /admin-body -->
+</div><!-- /admin-screen -->
+
+<script>
+const API = '';  // same origin; change to 'http://localhost:3000' during dev
+let TOKEN = localStorage.getItem('admin_token') || '';
+let editProjectId = null;
+let editEduId = null;
+
+// ── Helpers ──────────────────────────────────────────────────
+function toast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function api(method, path, body) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  if (res.status === 401) { doLogout(); return null; }
+  return res.json();
+}
+
+// ── Auth ─────────────────────────────────────────────────────
+async function doLogin() {
+  const username = document.getElementById('login-user').value.trim();
+  const password = document.getElementById('login-pass').value;
+  document.getElementById('login-btn').textContent = 'Signing in…';
+  try {
+    const res = await fetch(API + '/api/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (data.token) {
+      TOKEN = data.token;
+      localStorage.setItem('admin_token', TOKEN);
+      document.getElementById('admin-user-label').textContent = username;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      loadAll();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  } catch(e) {
+    document.getElementById('login-error').textContent = 'Cannot reach server.';
+    document.getElementById('login-error').style.display = 'block';
+  }
+  document.getElementById('login-btn').textContent = 'Sign In';
+}
+
+function doLogout() {
+  TOKEN = '';
+  localStorage.removeItem('admin_token');
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ── Navigation ───────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelector(`.sidebar-link[onclick="showTab('${name}')"]`).classList.add('active');
+}
+
+// ── Load All Data ────────────────────────────────────────────
+async function loadAll() {
+  const d = await api('GET', '/api/portfolio');
+  if (!d) return;
+
+  // Profile
+  document.getElementById('p-name').value  = d.profile.name || '';
+  document.getElementById('p-title').value = d.profile.title || '';
+  document.getElementById('p-bio').value   = d.profile.bio || '';
+  document.getElementById('p-email').value = d.profile.email || '';
+  document.getElementById('p-phone').value = d.profile.phone || '';
+
+  // Lists
+  renderLinks(d.links);
+  renderSkills(d.skills);
+  renderProjects(d.projects);
+  renderEdu(d.education);
+  renderCerts(d.certifications);
+  renderAch(d.achievements);
+}
+
+// ── Renders ──────────────────────────────────────────────────
+function renderLinks(links) {
+  document.getElementById('links-list').innerHTML = links.map(l => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title">${l.label}</div>
+        <div class="item-row-sub">${l.url}</div>
+      </div>
+      <div class="item-btns">
+        <button class="ibtn danger" onclick="deleteItem('links',${l.id})">Delete</button>
+      </div>
+    </div>`).join('') || '<p style="color:var(--text3);font-size:0.85rem">No links yet.</p>';
+}
+
+function renderSkills(skills) {
+  document.getElementById('skills-list').innerHTML = skills.map(s => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title">${s.skill}</div>
+        <div class="item-row-sub">${s.category}</div>
+      </div>
+      <div class="item-btns">
+        <button class="ibtn danger" onclick="deleteItem('skills',${s.id})">Delete</button>
+      </div>
+    </div>`).join('') || '<p style="color:var(--text3);font-size:0.85rem">No skills yet.</p>';
+}
+
+function renderProjects(projects) {
+  document.getElementById('projects-list').innerHTML = projects.map(pr => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title">${pr.name}</div>
+        <div class="item-row-sub">${pr.stack || ''} · ${pr.status}</div>
+      </div>
+      <div class="item-btns">
+        <button class="ibtn primary" onclick="editProject(${pr.id},'${esc(pr.name)}','${esc(pr.stack||'')}','${esc(pr.description||'')}','${pr.status}','${esc(pr.url||'')}')">Edit</button>
+        <button class="ibtn danger" onclick="deleteItem('projects',${pr.id})">Delete</button>
+      </div>
+    </div>`).join('') || '<p style="color:var(--text3);font-size:0.85rem">No projects yet.</p>';
+}
+
+function renderEdu(edu) {
+  document.getElementById('edu-list').innerHTML = edu.map(e => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title">${e.school}</div>
+        <div class="item-row-sub">${e.degree || ''} · ${e.score || ''} · ${e.year || ''}</div>
+      </div>
+      <div class="item-btns">
+        <button class="ibtn primary" onclick="editEdu(${e.id},'${esc(e.degree||'')}','${esc(e.school)}','${esc(e.place||'')}','${esc(e.score||'')}','${esc(e.year||'')}')">Edit</button>
+        <button class="ibtn danger" onclick="deleteItem('education',${e.id})">Delete</button>
+      </div>
+    </div>`).join('') || '<p style="color:var(--text3);font-size:0.85rem">No education yet.</p>';
+}
+
+function renderCerts(certs) {
+  document.getElementById('certs-list').innerHTML = certs.map(c => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title">${c.name}</div>
+        <div class="item-row-sub">${c.issued_by || ''}</div>
+      </div>
+      <div class="item-btns">
+        <button class="ibtn danger" onclick="deleteItem('certifications',${c.id})">Delete</button>
+      </div>
+    </div>`).join('') || '<p style="color:var(--text3);font-size:0.85rem">No certifications yet.</p>';
+}
+
+function renderAch(achs) {
+  document.getElementById('ach-list').innerHTML = achs.map(a => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title">${a.title}</div>
+        <div class="item-row-sub">${a.issued_by || ''} · ${a.rank_badge || ''}</div>
+      </div>
+      <div class="item-btns">
+        <button class="ibtn danger" onclick="deleteItem('achievements',${a.id})">Delete</button>
+      </div>
+    </div>`).join('') || '<p style="color:var(--text3);font-size:0.85rem">No achievements yet.</p>';
+}
+
+function esc(s) { return String(s).replace(/'/g, "\\'"); }
+
+// ── CRUD actions ─────────────────────────────────────────────
+async function saveProfile() {
+  const body = {
+    name:  document.getElementById('p-name').value,
+    title: document.getElementById('p-title').value,
+    bio:   document.getElementById('p-bio').value,
+    email: document.getElementById('p-email').value,
+    phone: document.getElementById('p-phone').value
+  };
+  const r = await api('PUT', '/api/admin/profile', body);
+  r ? toast('Profile saved ✓') : toast('Error saving profile', 'error');
+}
+
+async function addLink() {
+  const label = document.getElementById('l-label').value.trim();
+  const url   = document.getElementById('l-url').value.trim();
+  if (!label || !url) return toast('Label and URL required', 'error');
+  await api('POST', '/api/admin/links', { label, url });
+  document.getElementById('l-label').value = '';
+  document.getElementById('l-url').value = '';
+  toast('Link added ✓');
+  reloadSection('links');
+}
+
+async function addSkill() {
+  const category = document.getElementById('s-cat').value;
+  const skill    = document.getElementById('s-skill').value.trim();
+  if (!skill) return;
+  await api('POST', '/api/admin/skills', { category, skill });
+  document.getElementById('s-skill').value = '';
+  toast('Skill added ✓');
+  reloadSection('skills');
+}
+
+async function saveProject() {
+  const name  = document.getElementById('pr-name').value.trim();
+  if (!name) return;
+  const body = {
+    name,
+    stack:       document.getElementById('pr-stack').value.trim(),
+    description: document.getElementById('pr-desc').value.trim(),
+    status:      document.getElementById('pr-status').value,
+    url:         document.getElementById('pr-url').value.trim()
+  };
+  if (editProjectId) {
+    await api('PUT', `/api/admin/projects/${editProjectId}`, body);
+    toast('Project updated ✓');
+    cancelProjectEdit();
+  } else {
+    await api('POST', '/api/admin/projects', body);
+    toast('Project added ✓');
+    ['pr-name','pr-stack','pr-desc','pr-url'].forEach(id => document.getElementById(id).value='');
+  }
+  reloadSection('projects');
+}
+
+function editProject(id, name, stack, desc, status, url) {
+  editProjectId = id;
+  document.getElementById('pr-name').value   = name;
+  document.getElementById('pr-stack').value  = stack;
+  document.getElementById('pr-desc').value   = desc;
+  document.getElementById('pr-status').value = status;
+  document.getElementById('pr-url').value    = url;
+  document.getElementById('project-form-title').textContent = 'Edit Project';
+  document.getElementById('pr-save-btn').textContent = 'Update Project';
+  document.getElementById('pr-cancel-btn').style.display = 'inline-block';
+  document.getElementById('project-form').scrollIntoView({ behavior: 'smooth' });
+}
+function cancelProjectEdit() {
+  editProjectId = null;
+  ['pr-name','pr-stack','pr-desc','pr-url'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('project-form-title').textContent = 'Add Project';
+  document.getElementById('pr-save-btn').textContent = 'Add Project';
+  document.getElementById('pr-cancel-btn').style.display = 'none';
+}
+
+async function saveEdu() {
+  const school = document.getElementById('ed-school').value.trim();
+  if (!school) return;
+  const body = {
+    degree: document.getElementById('ed-degree').value.trim(),
+    school,
+    place:  document.getElementById('ed-place').value.trim(),
+    score:  document.getElementById('ed-score').value.trim(),
+    year:   document.getElementById('ed-year').value.trim()
+  };
+  if (editEduId) {
+    await api('PUT', `/api/admin/education/${editEduId}`, body);
+    toast('Education updated ✓');
+    cancelEduEdit();
+  } else {
+    await api('POST', '/api/admin/education', body);
+    toast('Education added ✓');
+    ['ed-degree','ed-school','ed-place','ed-score','ed-year'].forEach(id => document.getElementById(id).value='');
+  }
+  reloadSection('education');
+}
+
+function editEdu(id, degree, school, place, score, year) {
+  editEduId = id;
+  document.getElementById('ed-degree').value = degree;
+  document.getElementById('ed-school').value = school;
+  document.getElementById('ed-place').value  = place;
+  document.getElementById('ed-score').value  = score;
+  document.getElementById('ed-year').value   = year;
+  document.getElementById('edu-form-title').textContent = 'Edit Education';
+  document.getElementById('ed-save-btn').textContent = 'Update Education';
+  document.getElementById('ed-cancel-btn').style.display = 'inline-block';
+}
+function cancelEduEdit() {
+  editEduId = null;
+  ['ed-degree','ed-school','ed-place','ed-score','ed-year'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('edu-form-title').textContent = 'Add Education';
+  document.getElementById('ed-save-btn').textContent = 'Add Education';
+  document.getElementById('ed-cancel-btn').style.display = 'none';
+}
+
+async function addCert() {
+  const name = document.getElementById('c-name').value.trim();
+  if (!name) return;
+  await api('POST', '/api/admin/certifications', { name, issued_by: document.getElementById('c-by').value.trim() });
+  document.getElementById('c-name').value = '';
+  document.getElementById('c-by').value   = '';
+  toast('Certification added ✓');
+  reloadSection('certs');
+}
+
+async function addAch() {
+  const title = document.getElementById('a-title').value.trim();
+  if (!title) return;
+  await api('POST', '/api/admin/achievements', {
+    title,
+    issued_by:  document.getElementById('a-by').value.trim(),
+    rank_badge: document.getElementById('a-rank').value.trim()
+  });
+  ['a-title','a-by','a-rank'].forEach(id => document.getElementById(id).value='');
+  toast('Achievement added ✓');
+  reloadSection('achievements');
+}
+
+async function deleteItem(type, id) {
+  if (!confirm('Delete this item?')) return;
+  await api('DELETE', `/api/admin/${type}/${id}`);
+  toast('Deleted ✓');
+  const sectionMap = { links:'links', skills:'skills', projects:'projects', education:'education', certifications:'certs', achievements:'achievements' };
+  reloadSection(sectionMap[type]);
+}
+
+async function reloadSection(section) {
+  const d = await api('GET', '/api/portfolio');
+  if (!d) return;
+  if (section === 'links')        renderLinks(d.links);
+  if (section === 'skills')       renderSkills(d.skills);
+  if (section === 'projects')     renderProjects(d.projects);
+  if (section === 'education')    renderEdu(d.education);
+  if (section === 'certs')        renderCerts(d.certifications);
+  if (section === 'achievements') renderAch(d.achievements);
+}
+
+async function changePassword() {
+  const currentPassword = document.getElementById('pw-current').value;
+  const newPassword     = document.getElementById('pw-new').value;
+  const confirm         = document.getElementById('pw-confirm').value;
+  if (newPassword !== confirm) return toast('Passwords do not match', 'error');
+  if (newPassword.length < 6)  return toast('Password must be at least 6 characters', 'error');
+  const r = await api('POST', '/api/change-password', { currentPassword, newPassword });
+  if (r && r.success) {
+    toast('Password updated ✓');
+    ['pw-current','pw-new','pw-confirm'].forEach(id => document.getElementById(id).value='');
+  } else {
+    toast(r?.error || 'Error updating password', 'error');
+  }
+}
+
+// ── Auto-login if token exists ───────────────────────────────
+if (TOKEN) {
+  // Quick verify
+  fetch(API + '/api/portfolio', { headers: { 'Authorization': `Bearer ${TOKEN}` } })
+    .then(r => {
+      if (r.ok) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-screen').style.display = 'block';
+        const payload = JSON.parse(atob(TOKEN.split('.')[1]));
+        document.getElementById('admin-user-label').textContent = payload.username || 'admin';
+        loadAll();
+      } else {
+        localStorage.removeItem('admin_token');
+        TOKEN = '';
+      }
+    }).catch(() => { TOKEN = ''; localStorage.removeItem('admin_token'); });
+}
+</script>
+</body>
+</html>

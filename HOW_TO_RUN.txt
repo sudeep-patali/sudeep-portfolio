@@ -1,0 +1,158 @@
+==============================================
+  SUDEEP PORTFOLIO — COMPLETE SETUP GUIDE
+==============================================
+
+FILES YOU HAVE:
+  server.js       → Backend (Node.js)
+  index.html      → Public portfolio page
+  admin.html      → Admin panel
+  setup.sql       → MySQL database + all data
+  package.json    → Node dependencies
+  .env            → Config (edit this)
+
+==============================================
+  FOLDER STRUCTURE TO CREATE
+==============================================
+
+Create this on your computer:
+
+  sudeep-portfolio/
+  ├── server.js
+  ├── package.json
+  ├── .env
+  ├── setup.sql
+  └── public/
+      ├── index.html
+      └── admin.html
+
+IMPORTANT: index.html and admin.html must go
+           inside a folder called "public"
+
+==============================================
+  STEP 1 — MYSQL SETUP
+==============================================
+
+Open MySQL (you already know how):
+
+  mysql -u root -p < setup.sql
+
+This creates the database, all 8 tables,
+and inserts all your portfolio data.
+
+Already done this? Skip to Step 2.
+
+==============================================
+  STEP 2 — EDIT THE .env FILE
+==============================================
+
+Open .env in VS Code. Change only DB_PASS:
+
+  PORT=3000
+  DB_HOST=localhost
+  DB_PORT=3306
+  DB_USER=root
+  DB_PASS=your_mysql_password   ← CHANGE THIS
+  DB_NAME=sudeep_portfolio
+  JWT_SECRET=sudeep_portfolio_secret_key_2024
+
+Save the file (Ctrl+S)
+
+==============================================
+  STEP 3 — OPEN TERMINAL IN VS CODE
+==============================================
+
+In VS Code:
+  Press Ctrl + ` (backtick key, below Escape)
+
+This opens the terminal inside VS Code.
+
+Navigate to your project folder:
+  cd sudeep-portfolio
+
+==============================================
+  STEP 4 — INSTALL PACKAGES (only once)
+==============================================
+
+In the VS Code terminal, type:
+
+  npm install
+
+Wait for it to finish. You'll see a
+node_modules folder appear in VS Code sidebar.
+
+==============================================
+  STEP 5 — RUN THE SERVER
+==============================================
+
+In the VS Code terminal, type:
+
+  node server.js
+
+You should see:
+
+  ===========================================
+    Server : http://localhost:3000
+    Admin  : http://localhost:3000/admin.html
+  ===========================================
+  MySQL OK - profile rows: 1
+  Admin OK - Login: admin / admin123
+
+If you see "MySQL FAILED" → your DB_PASS in
+.env is wrong. Fix it and run again.
+
+==============================================
+  STEP 6 — OPEN IN BROWSER
+==============================================
+
+Portfolio  → http://localhost:3000
+Admin      → http://localhost:3000/admin.html
+
+Admin login:
+  Username: admin
+  Password: admin123
+
+==============================================
+  COMMON ERRORS AND FIXES
+==============================================
+
+ERROR: Cannot find module 'bcryptjs'
+FIX:   Run  npm install  again
+
+ERROR: MySQL FAILED / ECONNREFUSED
+FIX:   MySQL is not running. Start it:
+       Windows → net start MySQL80
+       Mac     → brew services start mysql
+       Linux   → sudo service mysql start
+
+ERROR: DB_PASS = EMPTY
+FIX:   Open .env, add your MySQL password to DB_PASS
+
+ERROR: Invalid credentials on admin login
+FIX:   Server auto-fixes this on startup.
+       Just run node server.js and try again.
+
+ERROR: Cannot find module 'express'
+FIX:   You are not in the right folder.
+       Run: cd sudeep-portfolio  then  npm install
+
+==============================================
+  TO STOP THE SERVER
+==============================================
+
+Press Ctrl + C in the terminal
+
+==============================================
+  ADMIN PANEL FEATURES
+==============================================
+
+After login you can:
+  - Edit your name, bio, title, email, phone
+  - Add/delete social links
+  - Add/delete skills by category
+  - Add, edit, delete projects
+  - Add, edit, delete education
+  - Add/delete certifications
+  - Add/delete achievements
+  - Change your admin password
+
+All changes show on the portfolio immediately.

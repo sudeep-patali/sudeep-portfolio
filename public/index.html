@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sudeep P — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--surface:#1e1e2e;--surface2:#252535;
+--accent:#7c6af7;--accent2:#a89cf7;--accent3:#4ade80;--text:#e8e6ff;--text2:#9a98b8;--text3:#5a5878;
+--border:#2a2840;--border2:#3a3858;--mono:'DM Mono',monospace;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,15,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:-0.02em;color:var(--text)}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:1.5rem;align-items:center}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:0.85rem;font-family:var(--mono);letter-spacing:0.05em;transition:color .2s}
+.nav-links a:hover{color:var(--accent2)}
+
+.hero{min-height:100vh;display:flex;align-items:center;padding:6rem 2rem 2rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 40%, rgba(124,106,247,0.12) 0%, transparent 70%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.3}
+.hero-content{position:relative;max-width:760px}
+.hero-tag{font-family:var(--mono);font-size:0.75rem;color:var(--accent3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem}
+.hero-tag::before{content:'';width:24px;height:1px;background:var(--accent3)}
+.hero-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(3rem,8vw,5.5rem);line-height:1;letter-spacing:-0.03em;color:var(--text);margin-bottom:0.5rem}
+.hero-name span{color:var(--accent)}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(1rem,2.5vw,1.4rem);font-weight:400;color:var(--text2);margin-bottom:1.5rem}
+.hero-bio{color:var(--text2);line-height:1.8;max-width:540px;font-size:0.95rem;margin-bottom:2rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{background:var(--accent);color:#fff;padding:0.7rem 1.8rem;border-radius:4px;text-decoration:none;font-weight:500;font-size:0.9rem;transition:all .2s;border:none;cursor:pointer}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text);padding:0.7rem 1.8rem;border-radius:4px;text-decoration:none;font-weight:400;font-size:0.9rem;border:1px solid var(--border2);transition:all .2s;cursor:pointer}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.hero-links{display:flex;gap:1rem;margin-top:1.5rem;align-items:center}
+.hero-links a{color:var(--text3);font-family:var(--mono);font-size:0.78rem;text-decoration:none;letter-spacing:0.05em;transition:color .2s;display:flex;align-items:center;gap:0.4rem}
+.hero-links a:hover{color:var(--accent2)}
+.hero-links a::before{content:'↗';font-size:0.7rem}
+.hero-stats{display:flex;gap:2rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border)}
+.stat{text-align:left}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--text)}
+.stat-label{font-family:var(--mono);font-size:0.7rem;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-top:0.2rem}
+
+section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+.section-header{display:flex;align-items:center;gap:1rem;margin-bottom:3rem}
+.section-num{font-family:var(--mono);font-size:0.75rem;color:var(--accent);letter-spacing:0.1em}
+.section-title{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:-0.02em}
+.section-line{flex:1;height:1px;background:var(--border)}
+
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+.skill-cat{background:var(--bg2);padding:1.5rem}
+.skill-cat-title{font-family:var(--mono);font-size:0.7rem;color:var(--accent3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1rem}
+.skill-tags{display:flex;flex-wrap:wrap;gap:0.5rem}
+.skill-tag{background:var(--bg3);color:var(--text2);padding:0.35rem 0.8rem;font-size:0.82rem;font-family:var(--mono);border:1px solid var(--border);transition:all .2s;cursor:default}
+.skill-tag:hover{border-color:var(--accent);color:var(--accent)}
+
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+.project-card{background:var(--surface);border:1px solid var(--border);padding:1.8rem;position:relative;transition:all .3s;overflow:hidden}
+.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent3));transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.project-card:hover{border-color:var(--border2);transform:translateY(-3px)}
+.project-card:hover::before{transform:scaleX(1)}
+.project-stack{font-family:var(--mono);font-size:0.7rem;color:var(--accent);letter-spacing:0.08em;margin-bottom:0.8rem}
+.project-title{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:0.6rem;letter-spacing:-0.01em}
+.project-desc{color:var(--text2);font-size:0.88rem;line-height:1.7}
+.project-footer{margin-top:1.2rem;display:flex;align-items:center;justify-content:space-between}
+.project-status{font-family:var(--mono);font-size:0.7rem;padding:0.25rem 0.6rem;border-radius:2px}
+.status-ongoing{background:rgba(74,222,128,0.1);color:var(--accent3);border:1px solid rgba(74,222,128,0.2)}
+.status-complete{background:rgba(124,106,247,0.1);color:var(--accent2);border:1px solid rgba(124,106,247,0.2)}
+.project-link{color:var(--text3);font-family:var(--mono);font-size:0.78rem;text-decoration:none;display:flex;align-items:center;gap:0.3rem;transition:color .2s}
+.project-link:hover{color:var(--accent2)}
+
+.edu-list{display:flex;flex-direction:column;gap:0}
+.edu-item{display:grid;grid-template-columns:1fr auto;gap:1rem;padding:1.8rem 0;border-bottom:1px solid var(--border);position:relative;padding-left:1.5rem}
+.edu-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:4px;height:60%;background:var(--border2)}
+.edu-item:first-child::before{background:var(--accent)}
+.edu-degree{font-family:var(--mono);font-size:0.7rem;color:var(--accent3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem}
+.edu-school{font-family:'Syne',sans-serif;font-size:1rem;font-weight:600;margin-bottom:0.2rem}
+.edu-place{font-size:0.85rem;color:var(--text2)}
+.edu-score{text-align:right}
+.edu-pct{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text)}
+.edu-year{font-family:var(--mono);font-size:0.72rem;color:var(--text3);margin-top:0.2rem}
+
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.cert-card{background:var(--bg3);border:1px solid var(--border);padding:1.2rem 1.4rem;display:flex;align-items:flex-start;gap:0.8rem;transition:all .2s}
+.cert-card:hover{border-color:var(--border2)}
+.cert-icon{width:36px;height:36px;background:rgba(124,106,247,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono);font-size:0.75rem;color:var(--accent);font-weight:500;border:1px solid rgba(124,106,247,0.25)}
+.cert-name{font-size:0.85rem;color:var(--text);line-height:1.4;font-weight:500}
+.cert-by{font-family:var(--mono);font-size:0.72rem;color:var(--text3);margin-top:0.2rem}
+
+.ach-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.ach-item{background:var(--bg3);border:1px solid var(--border);padding:1.2rem 1.5rem;display:flex;gap:1rem;align-items:flex-start}
+.ach-rank{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--border2);line-height:1}
+.ach-rank.gold{color:rgba(250,200,75,0.4)}
+.ach-title-txt{font-weight:500;font-size:0.9rem;line-height:1.4;margin-bottom:0.2rem}
+.ach-by{font-family:var(--mono);font-size:0.72rem;color:var(--text3)}
+
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.contact-info{display:flex;flex-direction:column;gap:1rem}
+.contact-item{display:flex;align-items:center;gap:0.8rem;color:var(--text2);font-size:0.9rem}
+.contact-item a{color:var(--accent2);text-decoration:none}
+.contact-item a:hover{text-decoration:underline}
+.contact-icon{width:32px;height:32px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.85rem;color:var(--accent);flex-shrink:0}
+
+footer{border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:var(--mono);font-size:0.75rem;color:var(--text3)}
+
+/* Loading skeleton */
+.skeleton{background:linear-gradient(90deg,var(--bg3) 25%,var(--surface) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:4px;height:16px;margin-bottom:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Sudeep<span>.</span></div>
+  <div class="nav-links">
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<div class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for opportunities</div>
+    <h1 class="hero-name" id="hero-name"><span class="skeleton" style="width:320px;height:60px;display:block"></span></h1>
+    <h2 class="hero-title" id="hero-title"></h2>
+    <p class="hero-bio" id="hero-bio"></p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#projects">View Projects</a>
+      <a class="btn-outline" href="#contact">Get in Touch</a>
+    </div>
+    <div class="hero-links" id="hero-links-container"></div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">9.47</div><div class="stat-label">Current CGPA</div></div>
+      <div class="stat"><div class="stat-num">600+</div><div class="stat-label">LeetCode pts</div></div>
+      <div class="stat"><div class="stat-num">2×</div><div class="stat-label">Competition winner</div></div>
+    </div>
+  </div>
+</div>
+
+<section id="skills">
+  <div class="section-header"><span class="section-num">01.</span><h2 class="section-title">Skills</h2><div class="section-line"></div></div>
+  <div class="skills-grid" id="skills-grid"></div>
+</section>
+
+<section id="projects">
+  <div class="section-header"><span class="section-num">02.</span><h2 class="section-title">Projects</h2><div class="section-line"></div></div>
+  <div class="projects-grid" id="projects-grid"></div>
+</section>
+
+<section id="education">
+  <div class="section-header"><span class="section-num">03.</span><h2 class="section-title">Education</h2><div class="section-line"></div></div>
+  <div class="edu-list" id="edu-list"></div>
+</section>
+
+<section id="certs">
+  <div class="section-header"><span class="section-num">04.</span><h2 class="section-title">Certifications</h2><div class="section-line"></div></div>
+  <div class="cert-grid" id="cert-grid"></div>
+</section>
+
+<section id="achievements">
+  <div class="section-header"><span class="section-num">05.</span><h2 class="section-title">Achievements</h2><div class="section-line"></div></div>
+  <div class="ach-list" id="ach-list"></div>
+</section>
+
+<section id="contact">
+  <div class="section-header"><span class="section-num">06.</span><h2 class="section-title">Contact</h2><div class="section-line"></div></div>
+  <div class="contact-grid">
+    <div class="contact-info" id="contact-info"></div>
+    <div>
+      <p style="color:var(--text2);line-height:1.8;font-size:0.95rem;">Open to internships, collaborations, and full-time opportunities. Whether you have a project idea or just want to connect — feel free to reach out.</p>
+      <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;" id="contact-links-container"></div>
+    </div>
+  </div>
+</section>
+
+<footer>Built with code & curiosity · <span id="footer-name">Sudeep P</span> © 2024</footer>
+
+<script>
+const API = ''; // same origin; or set to 'http://localhost:3000' during dev
+
+async function loadPortfolio() {
+  try {
+    const res = await fetch(API + '/api/portfolio');
+    if (!res.ok) throw new Error('API error');
+    const d = await res.json();
+    render(d);
+  } catch(e) {
+    console.error('Failed to load portfolio data:', e);
+  }
+}
+
+function render(d) {
+  const p = d.profile;
+
+  // Hero
+  const parts = p.name.split(' ');
+  document.getElementById('hero-name').innerHTML =
+    parts.length > 1
+      ? parts.slice(0,-1).join(' ') + '<span> ' + parts.slice(-1)[0] + '</span>'
+      : p.name;
+  document.getElementById('hero-title').textContent = p.title;
+  document.getElementById('hero-bio').textContent = p.bio;
+  document.getElementById('footer-name').textContent = p.name;
+
+  document.getElementById('hero-links-container').innerHTML =
+    d.links.map(l => `<a href="${l.url}" target="_blank">${l.label}</a>`).join('');
+
+  // Skills
+  const cats = [...new Set(d.skills.map(s => s.category))];
+  document.getElementById('skills-grid').innerHTML = cats.map(cat => {
+    const items = d.skills.filter(s => s.category === cat);
+    return `<div class="skill-cat">
+      <div class="skill-cat-title">${cat}</div>
+      <div class="skill-tags">${items.map(s => `<span class="skill-tag">${s.skill}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  // Projects
+  document.getElementById('projects-grid').innerHTML = d.projects.map(pr => `
+    <div class="project-card">
+      <div class="project-stack">${pr.stack || ''}</div>
+      <div class="project-title">${pr.name}</div>
+      <div class="project-desc">${pr.description || ''}</div>
+      <div class="project-footer">
+        <span class="project-status ${pr.status === 'ongoing' ? 'status-ongoing' : 'status-complete'}">${pr.status === 'ongoing' ? '⟳ Ongoing' : '✓ Complete'}</span>
+        ${pr.url ? `<a class="project-link" href="${pr.url}" target="_blank">↗ View Project</a>` : `<span class="project-link" style="color:var(--text3);cursor:default;">URL pending</span>`}
+      </div>
+    </div>`).join('');
+
+  // Education
+  document.getElementById('edu-list').innerHTML = d.education.map((e, i) => `
+    <div class="edu-item">
+      <div>
+        <div class="edu-degree">${e.degree || ''}</div>
+        <div class="edu-school">${e.school}</div>
+        <div class="edu-place">${e.place || ''}</div>
+      </div>
+      <div class="edu-score">
+        <div class="edu-pct">${e.score || ''}</div>
+        <div class="edu-year">${e.year || ''}</div>
+      </div>
+    </div>`).join('');
+
+  // Certs
+  document.getElementById('cert-grid').innerHTML = d.certifications.map(c => `
+    <div class="cert-card">
+      <div class="cert-icon">${(c.issued_by||'').substring(0,3).toUpperCase()}</div>
+      <div><div class="cert-name">${c.name}</div><div class="cert-by">${c.issued_by || ''}</div></div>
+    </div>`).join('');
+
+  // Achievements
+  document.getElementById('ach-list').innerHTML = d.achievements.map(a => `
+    <div class="ach-item">
+      <div class="ach-rank ${a.rank_badge && (a.rank_badge.includes('1st') || a.rank_badge.includes('Gold')) ? 'gold' : ''}">${a.rank_badge || '★'}</div>
+      <div><div class="ach-title-txt">${a.title}</div><div class="ach-by">${a.issued_by || ''}</div></div>
+    </div>`).join('');
+
+  // Contact
+  document.getElementById('contact-info').innerHTML = `
+    <div class="contact-item"><div class="contact-icon">@</div><div>Email<br><a href="mailto:${p.email}">${p.email}</a></div></div>
+    <div class="contact-item"><div class="contact-icon">☎</div><div>Phone<br>${p.phone}</div></div>
+    ${d.links.map(l=>`<div class="contact-item"><div class="contact-icon">↗</div><div>${l.label}<br><a href="${l.url}" target="_blank">${l.url.replace(/https?:\/\//,'').split('/')[0]}</a></div></div>`).join('')}
+  `;
+
+  document.getElementById('contact-links-container').innerHTML =
+    d.links.map(l => `<a class="btn-outline" href="${l.url}" target="_blank">↗ ${l.label}</a>`).join('');
+}
+
+loadPortfolio();
+</script>
+</body>
+</html>
